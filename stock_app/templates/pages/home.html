@@ -1,0 +1,96 @@
+{% extends "pages/base.html" %}
+{% load static %}
+
+{% block title %}Nhà{% endblock  %}
+
+{% block heading %}
+
+<center>
+    <h1>Price Stock</h1>
+</center>
+
+{% endblock  %}
+
+{% block content %}
+<form method="POST" action="" id="data-form">
+    {% csrf_token %}
+
+    <div class="row">
+        <!-- Nhập Symbol -->
+        <div class="col-md-6">
+            <label for="symbol">Symbol:</label>
+            <input type="text" id="symbol" name="symbol" class="form-control" value="{{ symbol }}">
+        </div>
+        
+        <!-- From Date -->
+        <div class="col-md-3">
+            <label for="from_date">From Date:</label>
+            <input type="date" id="from_date" name="from_date" class="form-control" value="{{ from_date }}">
+        </div>
+    
+        <!-- To Date -->
+        <div class="col-md-3">
+            <label for="to_date">To Date:</label>
+            <input type="date" id="to_date" name="to_date" class="form-control" value="{{ to_date }}">
+        </div>
+    </div>
+    <br>
+
+    <!-- Tùy chọn CSV/XLSX -->
+    <div class="d-flex justify-content-end align-items-center mb-3 gap-3">
+        <!-- Radio buttons for CSV -->
+        <div class="form-check form-check-inline">
+            <input 
+                class="form-check-input" 
+                type="radio" 
+                id="csv" 
+                name="file_type" 
+                value="csv" 
+                {% if file_type == 'csv' %}checked{% endif %}>
+            <label class="form-check-label" for="csv">CSV</label>
+        </div>
+
+        <!-- Download Button -->
+        <div>
+            <button type="submit" name="action" class="btn btn-primary" value="download">Download</button>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center my-3">
+        <button type="submit" name="action" class="btn btn-danger px-5 py-2" value="get_data">Get Data</button>
+    </div>
+</form>
+
+<!-- Hiển thị dữ liệu nếu có -->
+{% if data %}
+    <table class="table table-bordered table-hover table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Date</th>
+                <th>Open</th>
+                <th>High</th>
+                <th>Low</th>
+                <th>Close</th>
+                <th>Volume</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+                <tr>
+                    <td>{{ row.date }}</td>
+                    <td>{{ row.open }}</td>
+                    <td>{{ row.high }}</td>
+                    <td>{{ row.low }}</td>
+                    <td>{{ row.close }}</td>
+                    <td>{{ row.Volume }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+<!-- Hiển thị lỗi nếu có -->
+{% if error %}
+    <p style="color: red;">{{ error }}</p>
+{% endif %}
+{% endblock  %}
